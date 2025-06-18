@@ -2,105 +2,185 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Kalorienrechner für dein Ziel</title>
+  <title>Kalorienrechner – Wakaa Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background-color: #2a1c16;
       color: #f5f5f5;
       font-family: sans-serif;
-      max-width: 500px;
-      margin: auto;
+      margin: 0;
       padding: 20px;
     }
-    input, select, button {
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background-color: #3a2b22;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #ffffff;
+    }
+    .section-title {
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .button-group button,
+    .goal-group button {
+      width: 48%;
+      margin: 1%;
+      padding: 12px;
+      border: 2px solid #99ccff;
+      background-color: transparent;
+      color: #f5f5f5;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .button-group button.active,
+    .goal-group button.active {
+      background-color: #99ccff;
+      color: #2a1c16;
+    }
+    input, select {
       width: 100%;
       padding: 10px;
-      margin: 6px 0;
+      margin: 6px 0 16px;
+      border-radius: 8px;
+      border: none;
       font-size: 16px;
     }
-    button {
+    .result {
+      margin-top: 20px;
+      background-color: #1f1612;
+      padding: 16px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .result h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .macros span {
+      display: block;
+      margin: 5px 0;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
       background-color: #99ccff;
       color: #2a1c16;
       font-weight: bold;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
-    }
-    h2 {
-      text-align: center;
-      color: #ffffff;
     }
   </style>
 </head>
 <body>
-  <h2>Kalorienrechner für dein Ziel</h2>
-  <p style="text-align: center; font-size: 14px; color: #cccccc;">Finde in 1 Minute heraus, wie viele Kalorien du wirklich brauchst.</p>
+  <div class="container">
+    <h1>Kalorienrechner</h1>
+    <p style="text-align:center; font-size:14px; color:#ccc">Berechne deinen Bedarf auf Basis deines Ziels & Alltags.</p>
 
-  <label>Alter (Jahre):</label>
-  <input id="age" type="number" min="10" max="99">
+    <div class="section-title">Geschlecht</div>
+    <div class="button-group">
+      <button onclick="setGender('female')" id="btn-female">Weiblich</button>
+      <button onclick="setGender('male')" id="btn-male">Männlich</button>
+    </div>
 
-  <label>Geschlecht:</label>
-  <select id="gender">
-    <option value="male">Männlich</option>
-    <option value="female">Weiblich</option>
-  </select>
+    <label>Alter</label>
+    <input type="number" id="age">
+    <label>Gewicht (kg)</label>
+    <input type="number" id="weight">
+    <label>Größe (cm)</label>
+    <input type="number" id="height">
+    <label>Sport pro Woche (z. B. 3)</label>
+    <input type="number" id="sport">
 
-  <label>Größe (cm):</label>
-  <input id="height" type="number" min="120" max="230">
+    <label>Alltagsaktivität</label>
+    <select id="activity">
+      <option value="1.2">Kaum aktiv</option>
+      <option value="1.375">Leicht aktiv</option>
+      <option value="1.55">Moderat aktiv</option>
+      <option value="1.725">Sehr aktiv</option>
+    </select>
 
-  <label>Gewicht (kg):</label>
-  <input id="weight" type="number" min="30" max="200">
+    <div class="section-title">Ziel</div>
+    <div class="goal-group">
+      <button onclick="setGoal('deficit')" id="goal-deficit">Abnehmen</button>
+      <button onclick="setGoal('maintain')" id="goal-maintain">Gewicht halten</button>
+      <button onclick="setGoal('surplus')" id="goal-surplus">Zunehmen</button>
+    </div>
 
-  <label>Aktivitätslevel:</label>
-  <select id="activity">
-    <option value="1.2">Wenig Bewegung</option>
-    <option value="1.375">Leicht aktiv (1–2x/Woche)</option>
-    <option value="1.55">Moderat aktiv (3–5x/Woche)</option>
-    <option value="1.725">Sehr aktiv (6–7x/Woche)</option>
-  </select>
+    <button class="submit-btn" onclick="calculate()">Jetzt berechnen</button>
 
-  <label>Ziel:</label>
-  <select id="goal">
-    <option value="deficit">Abnehmen</option>
-    <option value="maintain">Gewicht halten</option>
-    <option value="surplus">Muskelaufbau</option>
-  </select>
-
-  <button onclick="calculateCalories()">Kalorien berechnen</button>
-
-  <div id="result" style="margin-top:20px; font-size:18px;"></div>
+    <div class="result" id="result" style="display:none">
+      <h2>Dein Ergebnis 🎯</h2>
+      <div><strong id="calories"></strong> kcal pro Tag</div>
+      <div class="macros">
+        <span id="protein"></span>
+        <span id="carbs"></span>
+        <span id="fat"></span>
+      </div>
+    </div>
+  </div>
 
   <script>
-    function calculateCalories() {
-      const age = parseInt(document.getElementById('age').value);
-      const gender = document.getElementById('gender').value;
-      const height = parseInt(document.getElementById('height').value);
-      const weight = parseInt(document.getElementById('weight').value);
-      const activity = parseFloat(document.getElementById('activity').value);
-      const goal = document.getElementById('goal').value;
+    let selectedGender = '';
+    let selectedGoal = '';
 
-      if (!age || !height || !weight) {
-        document.getElementById('result').innerHTML = "<p style='color: #ffcc00;'>Bitte alle Felder korrekt ausfüllen.</p>";
+    function setGender(g) {
+      selectedGender = g;
+      document.getElementById('btn-male').classList.remove('active');
+      document.getElementById('btn-female').classList.remove('active');
+      document.getElementById('btn-' + g).classList.add('active');
+    }
+
+    function setGoal(g) {
+      selectedGoal = g;
+      document.getElementById('goal-deficit').classList.remove('active');
+      document.getElementById('goal-maintain').classList.remove('active');
+      document.getElementById('goal-surplus').classList.remove('active');
+      document.getElementById('goal-' + g).classList.add('active');
+    }
+
+    function calculate() {
+      const age = +document.getElementById('age').value;
+      const weight = +document.getElementById('weight').value;
+      const height = +document.getElementById('height').value;
+      const activity = +document.getElementById('activity').value;
+      const sport = +document.getElementById('sport').value || 0;
+
+      if (!selectedGender || !selectedGoal || !age || !weight || !height) {
+        alert('Bitte alle Felder ausfüllen und Optionen wählen.');
         return;
       }
 
-      let bmr;
-      if (gender === 'male') {
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-      } else {
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-      }
+      let bmr = selectedGender === 'male'
+        ? 10 * weight + 6.25 * height - 5 * age + 5
+        : 10 * weight + 6.25 * height - 5 * age - 161;
 
-      let tdee = bmr * activity;
-      let adjusted;
-      if (goal === 'deficit') adjusted = tdee - 300;
-      else if (goal === 'surplus') adjusted = tdee + 300;
-      else adjusted = tdee;
+      const activityFactor = activity + sport * 0.05;
+      let tdee = bmr * activityFactor;
 
-      adjusted = Math.round(adjusted);
+      if (selectedGoal === 'deficit') tdee -= 300;
+      if (selectedGoal === 'surplus') tdee += 300;
 
-      document.getElementById('result').innerHTML =
-        `<p><strong>Dein geschätzter Tagesbedarf:</strong><br><span style='font-size:22px;'>${adjusted} kcal</span></p>`;
+      const calories = Math.round(tdee);
+      const protein = Math.round(weight * 1.8);
+      const fat = Math.round((calories * 0.25) / 9);
+      const carbs = Math.round((calories - (protein * 4 + fat * 9)) / 4);
+
+      document.getElementById('calories').innerText = calories;
+      document.getElementById('protein').innerText = protein + 'g Protein';
+      document.getElementById('carbs').innerText = carbs + 'g Kohlenhydrate';
+      document.getElementById('fat').innerText = fat + 'g Fett';
+      document.getElementById('result').style.display = 'block';
     }
   </script>
 </body>
