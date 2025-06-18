@@ -14,10 +14,10 @@
     }
     .container {
       width: 100%;
-max-width: 100%;
+      max-width: 100%;
       margin: auto;
       background-color: #3a2b22;
-      padding: 20px;
+      padding: 12px;
       border-radius: 16px;
     }
     h1 {
@@ -35,7 +35,7 @@ max-width: 100%;
       width: 48%;
       margin: 1%;
       padding: 12px;
-      border: 2px solid #99ccff;
+      border: 2px solid #d2b48c;
       background-color: transparent;
       color: #f5f5f5;
       font-weight: bold;
@@ -44,7 +44,7 @@ max-width: 100%;
     }
     .button-group button.active,
     .goal-group button.active {
-      background-color: #99ccff;
+      background-color: #d2b48c;
       color: #2a1c16;
     }
     input, select {
@@ -55,26 +55,11 @@ max-width: 100%;
       border: none;
       font-size: 16px;
     }
-    .result {
-      margin-top: 20px;
-      background-color: #1f1612;
-      padding: 16px;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .result h2 {
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-    .macros span {
-      display: block;
-      margin: 5px 0;
-    }
     .submit-btn {
       width: 100%;
       padding: 12px;
       font-size: 18px;
-      background-color: #99ccff;
+      background-color: #d2b48c;
       color: #2a1c16;
       font-weight: bold;
       border: none;
@@ -121,16 +106,6 @@ max-width: 100%;
     </div>
 
     <button class="submit-btn" onclick="calculate()">Jetzt berechnen</button>
-
-    <div class="result" id="result" style="display:none">
-      <h2>Dein Ergebnis 🎯</h2>
-      <div><strong id="calories"></strong> kcal pro Tag</div>
-      <div class="macros">
-        <span id="protein"></span>
-        <span id="carbs"></span>
-        <span id="fat"></span>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -166,7 +141,6 @@ max-width: 100%;
       }
 
       let bmr;
-
       if (bodyfat && bodyfat > 0 && bodyfat < 70) {
         const leanMass = weight * (1 - bodyfat / 100);
         bmr = 370 + (21.6 * leanMass);
@@ -178,7 +152,6 @@ max-width: 100%;
 
       const activityFactor = activity + sport * 0.05;
       let tdee = bmr * activityFactor;
-
       if (selectedGoal === 'deficit') tdee -= 300;
       if (selectedGoal === 'surplus') tdee += 300;
 
@@ -187,11 +160,8 @@ max-width: 100%;
       const fat = Math.round((calories * 0.25) / 9);
       const carbs = Math.round((calories - (protein * 4 + fat * 9)) / 4);
 
-      document.getElementById('calories').innerText = calories;
-      document.getElementById('protein').innerText = protein + 'g Protein';
-      document.getElementById('carbs').innerText = carbs + 'g Kohlenhydrate';
-      document.getElementById('fat').innerText = fat + 'g Fett';
-      document.getElementById('result').style.display = 'block';
+      const resultPage = `https://wakaablog.github.io/kalorienrechner/ergebnis.html?cal=${calories}&p=${protein}&c=${carbs}&f=${fat}`;
+      window.location.href = resultPage;
     }
   </script>
 </body>
