@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalorienrechner für dein Ziel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #2a1c16;
+      color: #f5f5f5;
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      font-size: 16px;
+    }
+    button {
+      background-color: #99ccff;
+      color: #2a1c16;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    h2 {
+      text-align: center;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h2>Kalorienrechner für dein Ziel</h2>
+  <p style="text-align: center; font-size: 14px; color: #cccccc;">Finde in 1 Minute heraus, wie viele Kalorien du wirklich brauchst.</p>
+
+  <label>Alter (Jahre):</label>
+  <input id="age" type="number" min="10" max="99">
+
+  <label>Geschlecht:</label>
+  <select id="gender">
+    <option value="male">Männlich</option>
+    <option value="female">Weiblich</option>
+  </select>
+
+  <label>Größe (cm):</label>
+  <input id="height" type="number" min="120" max="230">
+
+  <label>Gewicht (kg):</label>
+  <input id="weight" type="number" min="30" max="200">
+
+  <label>Aktivitätslevel:</label>
+  <select id="activity">
+    <option value="1.2">Wenig Bewegung</option>
+    <option value="1.375">Leicht aktiv (1–2x/Woche)</option>
+    <option value="1.55">Moderat aktiv (3–5x/Woche)</option>
+    <option value="1.725">Sehr aktiv (6–7x/Woche)</option>
+  </select>
+
+  <label>Ziel:</label>
+  <select id="goal">
+    <option value="deficit">Abnehmen</option>
+    <option value="maintain">Gewicht halten</option>
+    <option value="surplus">Muskelaufbau</option>
+  </select>
+
+  <button onclick="calculateCalories()">Kalorien berechnen</button>
+
+  <div id="result" style="margin-top:20px; font-size:18px;"></div>
+
+  <script>
+    function calculateCalories() {
+      const age = parseInt(document.getElementById('age').value);
+      const gender = document.getElementById('gender').value;
+      const height = parseInt(document.getElementById('height').value);
+      const weight = parseInt(document.getElementById('weight').value);
+      const activity = parseFloat(document.getElementById('activity').value);
+      const goal = document.getElementById('goal').value;
+
+      if (!age || !height || !weight) {
+        document.getElementById('result').innerHTML = "<p style='color: #ffcc00;'>Bitte alle Felder korrekt ausfüllen.</p>";
+        return;
+      }
+
+      let bmr;
+      if (gender === 'male') {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      } else {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      }
+
+      let tdee = bmr * activity;
+      let adjusted;
+      if (goal === 'deficit') adjusted = tdee - 300;
+      else if (goal === 'surplus') adjusted = tdee + 300;
+      else adjusted = tdee;
+
+      adjusted = Math.round(adjusted);
+
+      document.getElementById('result').innerHTML =
+        `<p><strong>Dein geschätzter Tagesbedarf:</strong><br><span style='font-size:22px;'>${adjusted} kcal</span></p>`;
+    }
+  </script>
+</body>
+</html>
