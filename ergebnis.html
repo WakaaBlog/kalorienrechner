@@ -5,48 +5,82 @@
   <title>Dein Kalorienergebnis – Wakaa Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --accent: #f67938;
+    }
+
     body {
-      background-color: #2a1c16;
-      color: #f5f5f5;
       font-family: sans-serif;
       margin: 0;
       padding: 20px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
+
     .container {
-width: 100%;
-max-width: 100%;
+      width: 100%;
+      max-width: 100%;
       margin: auto;
-      background-color: #3a2b22;
       padding: 20px;
       border-radius: 16px;
       text-align: center;
+      transition: background 0.3s ease, color 0.3s ease;
     }
+
     h1 {
       font-size: 24px;
-      color: #ffffff;
+      margin-bottom: 10px;
     }
+
     .highlight {
       font-size: 32px;
       font-weight: bold;
       margin: 20px 0;
-      color: #d2b48c;
+      color: var(--accent);
     }
+
     .macros span {
       display: block;
       margin: 8px 0;
       font-size: 18px;
     }
+
     .back {
       margin-top: 30px;
     }
+
     .back a {
       display: inline-block;
       padding: 10px 16px;
-      background-color: #d2b48c;
-      color: #2a1c16;
+      background-color: var(--accent);
+      color: #fff;
       font-weight: bold;
       text-decoration: none;
       border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    /* Light Mode */
+    @media (prefers-color-scheme: light) {
+      body {
+        background-color: #f7f7f7;
+        color: #222;
+      }
+
+      .container {
+        background-color: #ffffff;
+      }
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #f1f1f1;
+      }
+
+      .container {
+        background-color: #1e1e1e;
+      }
     }
   </style>
 </head>
