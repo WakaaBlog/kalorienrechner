@@ -85,10 +85,7 @@
   </style>
 </head>
 <body>
-  <div style="text-align: center; margin-bottom: 20px; font-size: 16px;">
-  🔗 Du bist auf einer Tool-Seite vom <a href="https://wakaatools.com" style="color: var(--accent); font-weight: bold; text-decoration: none;">Wakaa Blog</a> – deinem Blog für Fitness, Ernährung & Lifestyle.
-</div>
-  <div class="container">
+  <div class="container" id="ergebnis">
     <h1>🎯 Dein Ergebnis</h1>
     <p>Dein berechneter Kalorienbedarf liegt bei:</p>
     <div class="highlight" id="calories">-</div>
@@ -115,8 +112,19 @@
       document.getElementById('carbs').textContent = `${c}g Kohlenhydrate`;
       document.getElementById('fat').textContent = `${f}g Fett`;
 
-      // ➤ Hier kommt die Scroll-Funktion dazu:
-      document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+      // 📱 Sanftes Scrollen mit Fallback für Mobile/Safari
+      const resultElement = document.getElementById("ergebnis");
+
+      setTimeout(() => {
+        // Standard scrollIntoView
+        resultElement.scrollIntoView({ behavior: "smooth" });
+
+        // iOS-Fallback
+        setTimeout(() => {
+          const top = resultElement.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: top, behavior: "smooth" });
+        }, 200);
+      }, 200);
     }
   </script>
 </body>
